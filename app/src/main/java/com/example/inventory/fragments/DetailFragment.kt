@@ -1,18 +1,16 @@
 package com.example.inventory.fragments
 
-import RecyclerViewAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.inventory.R
 import com.example.inventory.model.Product
@@ -24,11 +22,12 @@ class DetailFragment : Fragment(), Presenter.ProductView {
     private lateinit var binding: FragmentDetailOfProductBinding
     private lateinit var presenter: PresenterClass
     private var selectedImageUri: Uri? = null
+    private var isImageChanged = false
     private var PICK_IMAGE_REQUEST = 1
     private lateinit var product: Product
 
     companion object {
-        private const val ARG_PRODUCT = "products"
+        const val ARG_PRODUCT = "products"
         fun newInstance(product: Product): DetailFragment {
             val args = Bundle()
             args.putParcelable(ARG_PRODUCT, product)
@@ -37,6 +36,7 @@ class DetailFragment : Fragment(), Presenter.ProductView {
             return fragment
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         product = arguments?.getParcelable(ARG_PRODUCT) ?: product
@@ -53,7 +53,8 @@ class DetailFragment : Fragment(), Presenter.ProductView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getProduct()
+        presenter = PresenterClass(requireContext())
+        presenter.attachView(this)
         getInfo()
         binding.buttonCancel.setOnClickListener {
             val fragment = MainFragment()
@@ -72,15 +73,14 @@ class DetailFragment : Fragment(), Presenter.ProductView {
         binding.imageHolder.setOnClickListener {
             chooseImage()
         }
-        editProduct()
+        binding.buttonSave.setOnClickListener {
+            product.id?.let { it1 -> editProduct(it1) }
+        }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         presenter.detachView()
-    }
-    private fun getProduct() {
-        presenter = PresenterClass(requireContext())
-        presenter.attachView(this)
     }
 
     private fun getInfo() {
@@ -92,30 +92,24 @@ class DetailFragment : Fragment(), Presenter.ProductView {
             .load(Uri.parse(product.image))
             .into(binding.imageView3)
     }
-    private fun editProduct() {
-        binding.buttonSave.setOnClickListener {
-            if (binding.name.text.isNotEmpty() && binding.price.text.isNotEmpty() &&
-                binding.manufacturer.text.isNotEmpty() && binding.quantity.text.isNotEmpty()
-            ) {
-                val product = Product(
-                    image = selectedImageUri.toString(),
-                    name = binding.inputName.text.toString(),
-                    price = binding.inputPrice.text.toString(),
-                    manufacturer = binding.inputManufacturer.text.toString(),
-                    quantity = binding.inputQuantity.text.toString()
-                )
-                presenter.updateProduct(product)
-                Toast.makeText(requireContext(), "Product is edited", Toast.LENGTH_SHORT).show()
-                requireActivity().supportFragmentManager.popBackStack()
-            } else {
-                Toast.makeText(requireContext(), "Invalid input", Toast.LENGTH_SHORT).show()
-            }
-        }
+
+    private fun editProduct(id:Int) {
+        val image = if (isImageChanged) selectedImageUri.toString() else product.image
+        val name = binding.inputName.text.toString()
+        val price = binding.inputPrice.text.toString()
+        val manufacturer = binding.inputManufacturer.text.toString()
+        val quantity = binding.inputQuantity.text.toString()
+        val product = Product(id, image, name, price, manufacturer, quantity)
+        presenter.updateProduct(product)
+        Toast.makeText(requireContext(), "Product is edited", Toast.LENGTH_SHORT).show()
+        requireActivity().supportFragmentManager.popBackStack()
     }
+
     private fun chooseImage() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST)
+        isImageChanged = true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -124,8 +118,11 @@ class DetailFragment : Fragment(), Presenter.ProductView {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
             selectedImageUri = data.data
             Glide.with(this).load(selectedImageUri).into(binding.imageView3)
+
+            isImageChanged = true
         }
     }
+
     override fun showAllProducts(products: List<Product>) {
     }
 }

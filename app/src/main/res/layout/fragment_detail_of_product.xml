@@ -45,7 +45,7 @@
         android:layout_height="100dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:background="#F6F7F7"
+        android:backgroundTint="#F6F7F7"
         app:cardCornerRadius="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -85,7 +85,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name"
-        tools:cardCornerRadius="30dp">
+        app:cardCornerRadius="30dp"
+        tools:ignore="ExtraText">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/inputName"
@@ -94,8 +95,10 @@
             android:hint="Впишите название товара"
             android:textColorHint="#C7CBCB"
             android:textSize="15sp"
-            android:textStyle="bold" />
-
+            android:textStyle="bold"
+            android:layout_marginStart="10dp"
+            android:background="@android:color/transparent"
+            tools:ignore="SpeakableTextPresentCheck" />
     </androidx.cardview.widget.CardView>
 
     <TextView
@@ -120,7 +123,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/price"
-        tools:cardCornerRadius="30dp">
+        app:cardCornerRadius="30dp"
+        tools:ignore="ExtraText">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/inputPrice"
@@ -130,8 +134,9 @@
             android:textColorHint="#C7CBCB"
             android:textSize="15sp"
             android:textStyle="bold"
+            android:layout_marginStart="10dp"
+            android:background="@android:color/transparent"
             tools:ignore="SpeakableTextPresentCheck" />
-
     </androidx.cardview.widget.CardView>
 
     <TextView
@@ -156,18 +161,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/manufacturer"
-        tools:cardCornerRadius="30dp">
+        app:cardCornerRadius="30dp"
+        tools:ignore="ExtraText">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/inputManufacturer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Название производителя товара"
+            android:hint="Производитель товара"
             android:textColorHint="#C7CBCB"
             android:textSize="15sp"
             android:textStyle="bold"
+            android:layout_marginStart="10dp"
+            android:background="@android:color/transparent"
             tools:ignore="SpeakableTextPresentCheck" />
-
     </androidx.cardview.widget.CardView>
 
     <TextView
@@ -192,43 +199,40 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/quantity"
-        tools:cardCornerRadius="30dp">
+        app:cardCornerRadius="30dp"
+        tools:ignore="ExtraText">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/inputQuantity"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Производитель товара"
+            android:hint="Количество товара"
             android:textColorHint="#C7CBCB"
             android:textSize="15sp"
             android:textStyle="bold"
+            android:layout_marginStart="10dp"
+            android:background="@android:color/transparent"
             tools:ignore="SpeakableTextPresentCheck" />
-
     </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/buttonCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="43dp"
+        android:layout_marginTop="40dp"
         android:text="Отмена"
         android:textColor="#2A8CFF"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/quantityOfProduct"
         app:layout_constraintTop_toBottomOf="@+id/quantityOfProduct" />
 
     <Button
         android:id="@+id/buttonSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="116dp"
-        android:layout_marginEnd="40dp"
+        android:backgroundTint="#2A8CFF"
         android:text="Сохранить"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/quantityOfProduct"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/buttonCancel"
         app:layout_constraintTop_toTopOf="@+id/buttonCancel"
-        android:backgroundTint="#2A8CFF"
         tools:ignore="TextContrastCheck" />
 </androidx.constraintlayout.widget.ConstraintLayout>
